@@ -79,7 +79,7 @@ Logout and login again and you can use `sudo`
 I had problems with using bridge mode, so the following instructions use NAT
 and port forwarding. 
 
-1. In the VM run `ip addr show` to see the internal IP address. Mine is `10.0.2.15`.
+1. In the VM run `ip addr show` to see the guest IP address. Mine is `10.0.2.15`.
 2. Shudown the VM
 3. In the VirtualBox GUI click the settings button and make sure you're in expert mode.
 4. Add these rules, substituting the VM IP if it differs from the one above:
@@ -119,3 +119,58 @@ and port forwarding.
   Guest IP    10.0.2.15
   Guest Port  22
 ```
+
+Save the changes, start the VM and you should now be able to SSH in from the host machine:
+
+`ssh -p 2522 jr@127.0.0.1`
+
+## Start up headless
+
+From now on we can configure the VM without the VirtualBox GUI.
+
+```commandline
+VBoxManage startvm "suttacentral-bookworm" --type headless
+```
+
+Wait a bit for it to start up, then login via ssh from the host.
+
+## Install software required for SuttaCentral
+
+To get the source and build it you'll need a couple of packages:
+
+```commandline
+sudo apt-get install git make
+```
+
+I like to use the Github CLI. Installation instructions here:
+
+https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+
+And authenticate:
+
+https://cli.github.com/manual/gh_auth_login
+
+Now you can get the source:
+
+```commandline
+gh repo clone suttacentral/suttacentral
+```
+
+We also need docker. Configure the apt repository as explained here:
+
+https://docs.docker.com/engine/install/debian/
+
+Then install the recommended packages:
+
+```commandline
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Add your user to the docker group:
+
+```commandline
+sudo groupadd docker
+sudo usermod -aG docker jr
+newgrp docker
+```
+
