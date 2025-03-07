@@ -62,3 +62,60 @@ After starting the VM, you can start the OS installation.
 23. Yes to install grub on primary drive
 24. Select `/dev/sda`
 25. Installation is complete! Reboot
+
+## Set up sudo
+
+This isn't configured out of the box as on Ubuntu. As root:
+
+```bash
+apt install sudo
+usermod -aG sudo jr
+```
+
+Logout and login again and you can use `sudo`
+
+## Port forwarding
+
+I had problems with using bridge mode, so the following instructions use NAT
+and port forwarding. 
+
+1. In the VM run `ip addr show` to see the internal IP address. Mine is `10.0.2.15`.
+2. Shudown the VM
+3. In the VirtualBox GUI click the settings button and make sure you're in expert mode.
+4. Add these rules, substituting the VM IP if it differs from the one above:
+
+### ArangoDB
+```
+  Protocol    TCP
+  Host IP     127.0.0.1
+  Host Port   2529
+  Guest IP    10.0.2.15
+  Guest Port  8529
+```
+
+### Flask
+```
+  Protocol    TCP
+  Host IP     127.0.0.1
+  Host Port   2501
+  Guest IP    10.0.2.15
+  Guest Port  5001
+```
+
+### HTTP
+```
+  Protocol    TCP
+  Host IP     127.0.0.1
+  Host Port   2580
+  Guest IP    10.0.2.15
+  Guest Port  80
+```
+
+### SSH
+```
+  Protocol    TCP
+  Host IP     127.0.0.1
+  Host Port   2529
+  Guest IP    10.0.2.15
+  Guest Port  22
+```
