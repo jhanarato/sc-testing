@@ -156,7 +156,8 @@ Now you can get the source:
 gh repo clone suttacentral/suttacentral
 ```
 
-We also need docker. Configure the apt repository as explained here:
+### Docker
+Configure the apt repository as explained here:
 
 https://docs.docker.com/engine/install/debian/
 
@@ -174,3 +175,33 @@ sudo usermod -aG docker jr
 newgrp docker
 ```
 
+### Node.js
+
+Start by installing Node Version Manager:
+
+https://github.com/nvm-sh/nvm
+
+Logout/login then run:
+
+```commandline
+nvm install 18
+node -v
+npm -v
+```
+
+And you should see node and npm are installed with the appropriate versions.
+
+## Install Suttacentral
+
+The readme covers it well:
+
+https://github.com/suttacentral/suttacentral/
+
+Once you've done that, you should be able to hit suttacentral in your browser at 
+
+http://127.0.0.1:2580/
+
+Note: Swagger is a bit strange. If you go to the `/api/docs` endpoint it will give an error. 
+
+Entering http://localhost:2580/api/spec in the explore field will allow you to interact with the
+server API. You can fix it for good by changing the `sc-swagger` section in the docker compose file.
