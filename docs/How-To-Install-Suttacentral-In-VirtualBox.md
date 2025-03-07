@@ -33,3 +33,32 @@ Storage:        50GB (Total used after install is about 14GB)
 Network:        NAT (I had trouble in bridge mode, may work for you)
 ```
 
+## Install Debian
+
+After starting the VM, you can start the OS installation. 
+
+1. Select "Install" for a text mode installation.
+2. Set language: English (or your own)
+3. Country: Australia (or your own)
+4. Keyboard: American English (or your own)
+5. Hostname: `suttacentral-bookworm`
+6. Domain: `local`
+7. Set a root password
+8. Add user: `jr` (or your own, you'll need to substitute this in a lot of places)
+9. Set user password
+10. Configure Clock: Western Australia (or your own)
+11. Partitioning: Guided - Use Entire Disk
+12. Choose the disk to partition, there should only be one.
+13. Select "all files in one partition"
+14. Finish partitioning and write to disk.
+15. Wait for base system install
+16. Configure package manager - "no" to scanning extra installation media
+17. Select mirror country - Australia (or whatever is closest)
+18. Select archive mirror - deb.debian.org (or as you prefer)
+19. No to proxy
+20. Wait for apt to scan the mirror
+21. Popularity contest: up to you
+22. Software selection: deselect desktop environment and gnome, select SSH and standard system utilities.
+23. Yes to install grub on primary drive
+24. Select `/dev/sda`
+25. Installation is complete! Reboot
