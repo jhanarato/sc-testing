@@ -1,10 +1,8 @@
 # Installing Suttacentral in VirtualBox
 
-Recently I've been setting up a virtual machine on my desktop to run a
-full instance of SuttaCentral.net locally. For my own benefit I've 
-documented the steps I followed as I had to start from scratch several times.
-
-You, lucky reader, may need to do this fewer times if you follow this procedure.
+Recently I set up a virtual machine on my desktop to run a full instance of 
+SuttaCentral.net locally. Should you want something similar I've documented the 
+process. Here we use VirtualBox to install and configure the server.
 
 ## What is VirtualBox?
 
@@ -12,8 +10,8 @@ VirtualBox lets you run a guest operating system on the host. For my own purpose
 I want to develop on my Linux Mint desktop while having the server running separately
 on Debian. You can get VirtualBox at http://www.virtualbox.org
 
-It should be possible to run the server with supported Windows and Mac hosts, but I've
-not tried that myself. 
+It should be possible to run the virtual server on Windows and Mac. If you do manage
+to do so let me know.
 
 ## Configuring the VM
 
@@ -21,16 +19,19 @@ First download the net install image for Debian "Bookworm":
 
 https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.9.0-amd64-netinst.iso
 
-Start up VirtualBox and add a new VM. My settings:
+Start up VirtualBox and add a new VM. As far as resources are concerned, half of 
+the available RAM and CPU of the host machine is probably the maximum. The full 
+installation takes about 14GB of storage. I had problems with bridged network mode
+so the following instructions use NAT with port forwarding. Here's how I set it up:
 
 ```
 Name:           suttacentral-bookworm
 Folder:         /home/jr/virtualbox-vm
 ISO Image:      The downloaded iso file above
-Memory:         16GB (half my total)
-CPU Processors: 6 (half my total)
-Storage:        50GB (Total used after install is about 14GB)
-Network:        NAT (I had trouble in bridge mode, may work for you)
+Memory:         16GB
+CPU Processors: 6
+Storage:        50GB
+Network:        NAT
 ```
 
 ## Install Debian
@@ -65,7 +66,7 @@ After starting the VM, you can start the OS installation.
 
 ## Set up sudo
 
-This isn't configured out of the box as on Ubuntu. As root:
+Debian does not install sudo by default, but you can get it easily enough:
 
 ```bash
 apt install sudo
@@ -84,43 +85,14 @@ and port forwarding.
 3. In the VirtualBox GUI click the settings button and make sure you're in expert mode.
 4. Add these rules, substituting the VM IP if it differs from the one above:
 
-### ArangoDB
-```
-  Protocol    TCP
-  Host IP     127.0.0.1
-  Host Port   2529
-  Guest IP    10.0.2.15
-  Guest Port  8529
-```
+| Name     | Protocol | Host IP   | Host Port | Guest IP  | Guest Port |
+|----------|----------|-----------|-----------|-----------|------------|
+| ArangoDB | TCP      | 127.0.0.1 | 2529      | 10.0.2.15 | 8529       |
+| Flask    | TCP      | 127.0.0.1 | 2501      | 10.0.2.15 | 5001       |
+| Nginx    | TCP      | 127.0.0.1 | 2580      | 10.0.2.15 | 80         |
+| SSH      | TCP      | 127.0.0.1 | 2522      | 10.0.2.15 | 22         |
 
-### Flask
-```
-  Protocol    TCP
-  Host IP     127.0.0.1
-  Host Port   2501
-  Guest IP    10.0.2.15
-  Guest Port  5001
-```
-
-### HTTP
-```
-  Protocol    TCP
-  Host IP     127.0.0.1
-  Host Port   2580
-  Guest IP    10.0.2.15
-  Guest Port  80
-```
-
-### SSH
-```
-  Protocol    TCP
-  Host IP     127.0.0.1
-  Host Port   2529
-  Guest IP    10.0.2.15
-  Guest Port  22
-```
-
-Save the changes, start the VM and you should now be able to SSH in from the host machine:
+Save the changes, start the VM and you should now be able to SSH to the VM from the host machine:
 
 `ssh -p 2522 jr@127.0.0.1`
 
@@ -132,7 +104,7 @@ From now on we can configure the VM without the VirtualBox GUI.
 VBoxManage startvm "suttacentral-bookworm" --type headless
 ```
 
-Wait a bit for it to start up, then login via ssh from the host.
+Wait for Debian to boot, then login via ssh from the host.
 
 ## Install software required for SuttaCentral
 
